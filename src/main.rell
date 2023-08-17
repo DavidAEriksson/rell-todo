@@ -1,11 +1,26 @@
 module;
 
-object my_name {
-  mutable name= "World";
- }
-
-operation set_name(name) {
-  my_name.name = name;
+object State {
+  mutable count: integer = 0;
 }
 
-query hello_world() = "Hello %s!".format(my_name.name);
+entity Todo {
+  key id: integer;
+  mutable title: text;
+  mutable completed: boolean;
+}
+
+operation create_todo(title: text) {
+  create Todo(State.count, title = title, completed = false);
+  State.count = State.count + 1;
+}
+
+operation update_todo(id: integer, title: text, completed: boolean) {
+  update Todo @ {id} (title = title, completed = completed);
+}
+
+query get_todos() { 
+  return Todo @ {};
+}
+
+query get_todo(id: integer) = Todo @ {id} (.title, .completed);
