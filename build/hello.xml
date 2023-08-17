@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dict>
+    <entry key="blockstrategy">
+        <dict>
+            <entry key="name">
+                <string>net.postchain.base.BaseBlockBuildingStrategy</string>
+            </entry>
+        </dict>
+    </entry>
+    <entry key="config_consensus_strategy">
+        <string>HEADER_HASH</string>
+    </entry>
+    <entry key="configurationfactory">
+        <string>net.postchain.gtx.GTXBlockchainConfigurationFactory</string>
+    </entry>
+    <entry key="gtx">
+        <dict>
+            <entry key="modules">
+                <array>
+                    <string>net.postchain.rell.module.RellPostchainModuleFactory</string>
+                    <string>net.postchain.gtx.StandardOpsGTXModule</string>
+                </array>
+            </entry>
+            <entry key="rell">
+                <dict>
+                    <entry key="modules">
+                        <array>
+                            <string>main</string>
+                        </array>
+                    </entry>
+                    <entry key="sources">
+                        <dict>
+                            <entry key="main.rell">
+                                <string>module;
+
+object State {
+  mutable count: integer = 0;
+}
+
+entity Todo {
+  key id: integer;
+  mutable title: text;
+  mutable completed: boolean;
+}
+
+operation create_todo(title: text) {
+  create Todo(State.count, title = title, completed = false);
+  State.count = State.count + 1;
+}
+
+operation update_todo(id: integer, title: text, completed: boolean) {
+  update Todo @ {id} (title = title, completed = completed);
+}
+
+query get_todos() { 
+  return Todo @ {};
+}
+
+query get_todo(id: integer) = Todo @ {id} (.title, .completed);</string>
+                            </entry>
+                        </dict>
+                    </entry>
+                    <entry key="version">
+                        <string>0.12.0</string>
+                    </entry>
+                </dict>
+            </entry>
+        </dict>
+    </entry>
+    <entry key="revolt">
+        <dict>
+            <entry key="fast_revolt_status_timeout">
+                <int>2000</int>
+            </entry>
+        </dict>
+    </entry>
+</dict>
